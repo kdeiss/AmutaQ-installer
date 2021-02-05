@@ -1,0 +1,105 @@
+#! /bin/bash
+
+#mkdir ./etc 2> /dev/null
+#mkdir ./etc/webmin 2> /dev/null
+#mkdir ./etc/webmin/custom 2> /dev/null
+#cp /etc/webmin/custom/* ./etc/webmin/custom
+
+#dasi user
+#mime und der ganze dreck
+ORG=/home/dasi/.local/share/applications
+DIRNE1=`dirname $ORG`
+DIRNE2=`dirname $DIRNE1`
+DIRNE3=`dirname $DIRNE2`
+DIRNE4=`dirname $DIRNE3`
+
+mkdir ./root$DIRNE4 2>/dev/null
+mkdir ./root$DIRNE3 2>/dev/null
+mkdir ./root$DIRNE2 2>/dev/null
+mkdir ./root$DIRNE1 2>/dev/null
+mkdir ./root$ORG 2>/dev/null
+cp $ORG/* ./root$ORG
+
+ORG=/home/dasi/.local/share/mime/application
+DIRNE1=`dirname $ORG`
+DIRNE2=`dirname $DIRNE1`
+DIRNE3=`dirname $DIRNE2`
+DIRNE4=`dirname $DIRNE3`
+
+mkdir ./root$DIRNE4 2>/dev/null
+mkdir ./root$DIRNE3 2>/dev/null
+mkdir ./root$DIRNE2 2>/dev/null
+mkdir ./root$DIRNE1 2>/dev/null
+mkdir ./root$ORG 2>/dev/null
+cp $ORG/* ./root$ORG
+
+ORG=/home/dasi/Desktop
+DIRNE1=`dirname $ORG`
+/usr/bin/rsync -rltzuv $ORG ./root$DIRNE1
+
+chown -R dasi:dasi "./root/home/dasi" 
+
+echo "rest depreciated"
+exit 0
+
+
+mkdir ./root/etc 2> /dev/null
+mkdir ./root/etc/webmin 2> /dev/null
+mkdir ./root/etc/webmin/custom 2> /dev/null
+cp /etc/webmin/custom/* ./root/etc/webmin/custom
+
+ORG=/etc/init.d/ddumbfs
+cp $ORG ./root$ORG
+
+ORG=/etc/samba/smb.conf
+cp $ORG ./root$${ORG}.temp
+
+ORG=/etc/fstab
+cp $ORG ./root$${ORG}.temp
+
+ORG=/etc/exports
+cp $ORG ./root$${ORG}.temp
+
+ORG=/var/spool/cron/crontabs/root
+cp $ORG ./root$${ORG}.temp
+
+#dasi user
+#mime und der ganze dreck
+ORG=/home/dasi/.local/share/applications
+DIRNE1=`dirname $ORG`
+DIRNE2=`dirname $DIRNE1`
+DIRNE3=`dirname $DIRNE2`
+DIRNE4=`dirname $DIRNE3`
+
+mkdir ./root$DIRNE4 2>/dev/null
+mkdir ./root$DIRNE3 2>/dev/null
+mkdir ./root$DIRNE2 2>/dev/null
+mkdir ./root$DIRNE1 2>/dev/null
+mkdir ./root$ORG 2>/dev/null
+cp $ORG/* ./root$ORG
+
+ORG=/home/dasi/.local/share/mime/application
+DIRNE1=`dirname $ORG`
+DIRNE2=`dirname $DIRNE1`
+DIRNE3=`dirname $DIRNE2`
+DIRNE4=`dirname $DIRNE3`
+
+mkdir ./root$DIRNE4 2>/dev/null
+mkdir ./root$DIRNE3 2>/dev/null
+mkdir ./root$DIRNE2 2>/dev/null
+mkdir ./root$DIRNE1 2>/dev/null
+mkdir ./root$ORG 2>/dev/null
+cp $ORG/* ./root$ORG
+
+ORG=/home/dasi/Arbeitsfläche/AmutaQ!
+DIRNE1=`dirname $ORG`
+DIRNE2=`dirname $DIRNE1`
+
+mkdir ./root$DIRNE2 2>/dev/null
+mkdir ./root$DIRNE1 2>/dev/null
+mkdir ./root$ORG 2>/dev/null
+cp $ORG/* ./root$ORG
+
+chown -R dasi:dasi "./root/home/dasi" 
+
+

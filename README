@@ -1,0 +1,16 @@
+Getestet unter Mint 20.x
+
+Das aktuelle Releasefile (z.B release_AmutaQ-KSVR04-Jan-16-02.tar) unter
+
+/opt/AmutaQ!
+
+entfalten.
+
+Das aktuelle Installerpaket unter (z.B opt_install_AmutaQ-KSVR04-Jan-16-19.tgz) unter
+
+/opt/AmutaQ!-install
+
+entfalten.
+
+cd /opt/AmutaQ!-install/INSTALL
+./install

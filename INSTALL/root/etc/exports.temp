@@ -1,0 +1,2 @@
+/mnt/bufferdisk 192.168.1.0/24(rw,async,no_subtree_check)
+/mnt/ddumbfs 192.168.1.0/24(rw,async,no_subtree_check,fsid=20)

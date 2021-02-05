@@ -1,0 +1,29 @@
+#! /bin/bash
+
+# by k.deiss@it-userdesk.de
+# V 0.0.1 1.5.14
+# restore virtual machine to esxi server
+
+#don't edit from here
+
+source /opt/AmutaQ!/etc/AmutaQ!.conf
+
+
+LOG="/var/log/vm_restore.log"
+TMP="/tmp/$$.tmp"
+T="/BACKUPS/restore"
+DATASTORE="[datastore1] /"
+S=`pwd`
+S1=`basename $S`
+
+
+echo $S
+echo "$BAZAARVCB restore -H $VMHOST -u $VMUSER -p $VMPASSWORD --register $S1 $S $DATASTORE"
+sudo $BAZAARVCB restore -H $VMHOST -u $VMUSER -p $VMPASSWORD --register $S1 $S "$DATASTORE" | tee -a $LOG
+
+#$BAZAARVCB restore -H $VMHOST -u $VMUSER -p $VMPASSWORD  --listen 31033 --register $S1 $S "[Datastore1] /"
+RST=$?
+echo "`date` finished $VMGUEST ($RST)"
+echo ""
+
+exit

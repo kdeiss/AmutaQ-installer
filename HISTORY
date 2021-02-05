@@ -1,0 +1,14 @@
+VERSION=AmutaQ! 0.3.0.22.09.20
+update to Mint 20
+
+
+VERSION="AmutaQ! 0.2.21.24.12.15-X"
+added: 
+/opt/AmutaQ!-install/INSTALL/home/dasi/Desktop/AmutaQ!/backup.desktop
+/opt/AmutaQ!-install/INSTALL/var/spool/cron/crontabs/root.temp
+
+autoinstall vmware wixlib
+
+
+VERSION="AmutaQ! 0.2.20"
+Base Installer

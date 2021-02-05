@@ -1,0 +1,1 @@
+bin32/vmware-uninstall-vix-disklib.pl

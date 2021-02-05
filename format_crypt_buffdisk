@@ -1,0 +1,229 @@
+#! /bin/bash
+#Script for encrypting bufferdisk for Amuta!Q
+# usage: format_crypt dev_1 [dev_2]
+# Type dev_1 without /dev/. only "sdb" for example. Same with dev_2
+# When dev_2 is given, the script creates an raid0.
+# Make sure both devices have the same capacity!
+# /dev/md0 is standard. If used, change variable below.
+# V 0.0.1.16.9.19 initial release
+# V 0.0.2.26.12.19 add mddev variable & disk2 mountcheck
+# V 0.0.3.25.09.20 use luks1 for derived key
+
+FILESYSTEM="ext4"
+BUFFERDISK="/mnt/bufferdisk"
+BUFFERDISKNAME="bufferdisk"
+DISKRST=""
+DISK1=$1
+DISK2=$2
+MDDEV="/dev/md0"
+RAID=0
+
+#check if disk2 is set: Then create Software-Raid Level 0
+if [ -b /dev/$DISK2 ]; then
+    RAID=1
+    echo "# WILL CREATE SOFTWARE-RAID"
+    which "mdadm"
+    if [ $? -gt 0 ]; then
+        echo "ERROR: mdadm doesn't exist - CAN'T CONTINUE"
+	echo "Install with \"apt-get install mdadm\""
+	exit 1
+    fi
+    if [ -b $MDDEV ]; then
+        echo "ERROR: ARRAY $MDDEV EXISTS - CAN'T CONTINUE"
+	exit 1
+    fi
+fi
+
+
+# check whether device is available
+if [ ! -b /dev/$DISK1 ]; then
+        #this disk is mounted we can't continue
+        echo "ERROR: DEVICE /dev/$DISK1 IS NO BLOCK DEVICE - CAN'T CONTINUE"
+        exit 1
+fi
+
+# check whether device is available
+if [ $RAID -eq 1 && ! -b /dev/$DISK2 ]; then
+        #this disk is mounted we can't continue
+        echo "ERROR: DEVICE /dev/$DISK2 IS NO BLOCK DEVICE - CAN'T CONTINUE"
+        exit 1
+fi
+
+
+# check whether it is mounted
+mount | grep "$DISK1" > /dev/null
+if [ $? -eq 0 ] ; then
+    #this disk is mounted we can't continue
+    echo "ERROR: DISK /dev/$DISK1 IS MOUNTED - CAN'T CONTINUE"
+    echo "IF YOU WANT TO USE THIS DISK PLEASE UMOUNT IT."
+    exit 1
+fi
+
+if [ $RAID -eq 1 ]; then
+  mount | grep "$DISK2" > /dev/null
+  if [ $? -eq 0 ] ; then
+    #this disk is mounted we can't continue
+    echo "ERROR: DISK /dev/$DISK2 IS MOUNTED - CAN'T CONTINUE"
+    echo "IF YOU WANT TO USE THIS DISK PLEASE UMOUNT IT."
+    exit 1
+  fi
+fi
+
+#check if /mnt/bufferdisk is in fstab
+cat /etc/fstab |grep $BUFFERDISK > /dev/null
+if [ $? -eq 0 ] ; then
+    #this mountpoint is used already
+    echo "ERROR: please remove mountpoint for $BUFFERDISK from /etc/fstab"
+    exit 1
+fi
+#sicherheits-exit hier zum testen
+#exit 1
+
+if [ $RAID -eq 1 ]; then
+    echo "# creating gpt table on $DISK1."
+    parted -a optimal /dev/$DISK1 -- mktable gpt
+    if [ ! $? -eq 0 ] ; then
+        #this mountpoint is used already
+        echo "ERROR: User abort"
+        exit 1
+    fi
+    echo "# creating gpt table on $DISK2."
+    parted -a optimal /dev/$DISK2 -- mktable gpt
+    if [ ! $? -eq 0 ] ; then
+        #this mountpoint is used already
+        echo "ERROR: User abort"
+        exit 1
+    fi
+    echo "# Creating partitions on /dev/$DISK1 ..."
+    parted -a optimal /dev/$DISK1 -- mkpart primary 2048s -8192s
+    if [ ! $? -eq 0 ];then
+        echo "Error during partitioning $DISK1"
+       exit 1
+    fi
+    parted /dev/$DISK1 set 1 raid on
+
+    echo "# Creating partitions on /dev/$DISK2 ..."
+    parted -a optimal /dev/$DISK2 -- mkpart primary 2048s -8192s
+    if [ ! $? -eq 0 ];then
+        echo "Error during partitioning $DISK2"
+       exit 1
+    fi
+    parted /dev/$DISK2 set 1 raid on
+    sleep 1
+
+    echo "# creating raid."
+    mdadm --create $MDDEV --auto md --level=0 --raid-devices=2 /dev/${DISK1}1 /dev/${DISK2}1
+    DISKRST=`basename $MDDEV`
+    /usr/share/mdadm/mkconf > /etc/mdadm/mdadm.conf
+    update-initramfs -u -k all
+else
+    echo "# creating gpt table on $DISK1."
+    parted -a optimal /dev/$DISK1 -- mktable gpt
+    if [ ! $? -eq 0 ] ; then
+        #this mountpoint is used already
+        echo "ERROR: User abort"
+        exit 1
+    fi
+
+    echo "# Creating partitions on /dev/${DISK1} ..."
+    parted -a optimal /dev/$DISK1 -- mkpart ext2 0% 100%
+    if [ ! $? -eq 0 ];then
+        echo "Error during partitioning $DISKRST"
+       exit 1
+    fi
+    DISKRST=${DISK1}1
+fi
+
+echo "# encoding $DISKRST. Please enter your password:"
+cryptsetup -v luksFormat --type luks1 --verify-passphrase -v /dev/$DISKRST
+if [ ! $? -eq 0 ];then
+    echo "Error during encoding $DSKRST"
+    exit 1
+fi
+
+#open new partition
+echo "# Open encoded $DISKRST. Please enter your password again:"
+cryptsetup luksOpen /dev/${DISKRST} $BUFFERDISKNAME
+if [ ! $? -eq 0 ];then
+    echo "Error during opening $DSKRST"
+    exit 1
+fi
+
+echo "# Formating Disk with $FILESYSTEM"
+mkfs -t $FILESYSTEM /dev/mapper/$BUFFERDISKNAME
+if [ ! $? -eq 0 ];then
+    echo "Error during formating $DSKRST"
+    exit 1
+else
+    echo "# format ok!"
+fi
+
+echo "# SEARCHING UUID"
+UUID=`blkid|grep /dev/mapper/$BUFFERDISKNAME|cut -f 2 -d " "|cut -f 2 -d "=" | sed "s/\"//g"|cut -f 1 -d " "`
+if [ -z "$UUID" ]; then
+    echo "Can't get UUID of $DISKRST - can't continue !"
+    exit 1
+fi
+
+echo "# SEARCHING unencoded UUID"
+UNCODEDUUID=`blkid|grep /dev/${DISKRST}|cut -f 2 -d " "|cut -f 2 -d "=" | sed "s/\"//g"|cut -f 1 -d " "`
+if [ -z "$UNCODEDUUID" ]; then
+    echo 100 "Can't get UUID of underlying $DISKRST - can't continue !"
+    exit 1
+fi
+
+if [ ! -d $BUFFERDISK ]; then
+    mkdir $BUFFERDISK
+    mkdir $BUFFERDISK/bazaar
+fi
+if [ ! -d $BUFFERDISK ];then
+    echo "CAN'T CREATE MOUNTPOINT $BUFFERDISK"
+    exit 1
+else
+    chmod 777 $BUFFERDISK
+fi
+touch $BUFFERDISK/bazaar/NOT_MOUNTED
+
+echo "# ADDING MOUNT LINE TO FSTAB"
+echo "# disk added by $0 `date`" >> /etc/fstab
+echo "UUID=$UUID $BUFFERDISK $FILESYSTEM   noauto   0   0" >> /etc/fstab
+echo "" >> /etc/fstab
+
+if [ ! $? -eq 0 ];then
+    echo "CAN'T ADD MOUNTLINE TO FSTAB"
+    exit 1
+fi
+
+echo "# ADDING MOUNT LINE TO CRYPTTAB."
+echo "# disk added by $0 `date`" >> /etc/crypttab
+echo "$BUFFERDISKNAME UUID=$UNCODEDUUID   none   luks,noauto" >> /etc/crypttab
+echo "" >> /etc/crypttab
+
+if [ ! $? -eq 0 ];then
+    echo "CAN'T ADD MOUNTLINE TO CRYPTTAB."
+    exit 1
+fi
+
+echo "# MOUNTING VOLUME."
+mount $BUFFERDISK
+
+if [ ! $? -eq 0 ];then
+    #disk is not mounted - fuck
+    echo "DISK IS NOT MOUNTED - CAN'T CONTINUE"
+    echo "MOUNT CMD FAILED"
+    exit 1
+else
+    echo "MOUNT CMD SUCCESS"
+fi
+
+# check whether it is mounted
+echo "# VERIFYING MOUNTPOINT"
+let mpointfound=0
+mount | grep "$BUFFERDISK" > /dev/null
+if [ $? -eq 0 ] ; then
+    #this disk is mounted
+    echo "VERIFY MOUNT SUCCESS"
+else
+    echo "VERIFY MOUNT FAILED"
+fi
+

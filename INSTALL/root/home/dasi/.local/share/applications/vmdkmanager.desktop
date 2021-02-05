@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=VMDK Manager
+GenericName=VMDK Manager
+Comment=Mount vmdk files
+Exec=/opt/AmutaQ!/vmware/vmdkmanager
+Icon=system-software-update
+Terminal=false
+Type=Application
+Categories=System;Settings;
+X-Ubuntu-Gettext-Domain=vmdkmanager

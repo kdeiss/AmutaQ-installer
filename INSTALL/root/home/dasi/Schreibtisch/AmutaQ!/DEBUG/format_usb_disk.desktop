@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Format USB-Disk (DEBUG)
+Comment=Prepare Disk 4 AmutaQ! Backup
+Exec=/usr/local/bin/gksudo /opt/AmutaQ!/tools/x-formatdisk-debug
+Icon=drive-removable-media
+Path=/opt/AmutaQ!/tools
+Terminal=true
+StartupNotify=false

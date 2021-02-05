@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Umount all VMWare Disks
+Comment=Umount all VMWare Disks
+Exec=/usr/local/bin/gksudo /opt/AmutaQ!/vmware/xumount
+Icon=xfsm-hibernate
+Path=/opt/vmware
+Terminal=false
+StartupNotify=false

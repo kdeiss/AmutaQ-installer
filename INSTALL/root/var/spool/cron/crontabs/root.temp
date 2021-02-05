@@ -1,0 +1,14 @@
+#30 0,18 * * * /opt/AmutaQ!/backup/signal/switch.sh
+*/5 * * * * /opt/AmutaQ!/backup/asynccopy 2>>/var/log/async.log>>/var/log/async.log
+0 0 * * * /opt/AmutaQ!/tools/logrotate
+#*/5 * * * * /opt/AmutaQ!/backup/control_bazaar
+*/5 * * * * /opt/AmutaQ!/backup/control_lamw
+*/3 * * * * /opt/AmutaQ!//tools/create-cpu-stat
+0 * * * * /opt/AmutaQ!/tools/create-cpu-stat-h
+#0 4 * * * /usr/bin/touch /opt/AmutaQ!/backup/signal/wait #Stop Backup Cycle - Sytem remains active
+0 20 * * * /bin/rm -f /opt/AmutaQ!/backup/signal/wait #Start Backup
+#59 23 * * * /bin/rm -f /opt/AmutaQ!/backup/signal/skipcrc
+# 0 4 * * * /usr/bin/touch /opt/AmutaQ!/backup/signal/waita #Stop Async Backup Cycle - Sytem remains active
+# 0 20 * * * /bin/rm -f /opt/AmutaQ!/backup/signal/waita #Start Async Backup
+
+2 * * * * /opt/AmutaQ!/tools/check_hardware

@@ -1,0 +1,12 @@
+#!/usr/bin/env xdg-open
+
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=list vm's on ESXI server
+Comment=list vm's on ESXI server
+Exec=/usr/local/bin/gksudo /opt/AmutaQ!/bazaar/x_vm_list
+Icon=emblem-synchronizing
+Path=/opt/AmutaQ!/bazaar/
+Terminal=false
+StartupNotify=false

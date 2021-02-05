@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Network Settings
+Comment=Network Settings
+Exec=gksudo nm-connection-editor
+Icon=network-wired
+Path=
+Terminal=false
+StartupNotify=false

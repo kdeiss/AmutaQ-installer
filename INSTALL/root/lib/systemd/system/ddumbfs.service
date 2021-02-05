@@ -1,0 +1,12 @@
+[Unit]
+Description=ddumbfs
+After=syslog.target network.target
+
+[Service]
+Type=simple
+RemainAfterExit=yes
+ExecStart=/opt/AmutaQ!/ddumbfs/mount_fs
+ExecStop=/opt/AmutaQ!/ddumbfs/umount_fs
+
+[Install]
+WantedBy=multi-user.target

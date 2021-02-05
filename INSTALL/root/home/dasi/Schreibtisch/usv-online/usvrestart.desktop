@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=usv restart
+Comment=
+Exec=/usr/local/bin/gksudo /opt/ups/startupsman restart
+Icon=preferences-system-symbolic
+Path=/opt/ups/startupsman
+Terminal=true
+StartupNotify=true

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+    <mime-type type="application/x-vmdkmanager">
+        <comment>vmdk managment file</comment>
+        <icon name="application-x-executable"/>
+        <glob-deleteall/>
+        <glob pattern="*.vmm"/>
+    </mime-type>
+</mime-info>

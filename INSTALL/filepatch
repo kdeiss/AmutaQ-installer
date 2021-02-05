@@ -1,0 +1,123 @@
+#! /bin/bash
+# by k.deiss@it-userdesk.de
+# V 0.0.1.10.1.16
+
+
+PF1=/etc/sudoers
+PF2=/etc/samba/smb.conf
+PF3=/etc/exports
+PF4=/var/spool/cron/crontabs/root
+EDITOR=mcedit
+
+function primifileeditor()
+{
+#replaces line with search through replace
+fname=$1
+search=$2
+replace=$3
+
+let lfound=0
+TMPFILE="/tmp/$$_primiedit"
+
+if [ -f $fname ] ; then
+    while read line
+    do
+	if [[ ${line:0:1} == "#" ]]; then 
+	    echo $line >> $TMPFILE
+	else
+	    echo $line | grep $search
+	    if [ $? -eq 0 ] ;then
+		let lfound=$lfound+1
+		echo $replace >> $TMPFILE
+	    else
+		echo $line >> $TMPFILE
+    	    fi
+	fi
+
+    done < $fname
+else
+    echo "ERR $fname not found !!! "
+    exit 1
+fi
+
+if [ $lfound -eq 1 ] ; then
+    echo "$fname patsched ....."
+    cp $TMPFILE $fname
+else
+    echo "ERR $lfound lines found with $search !!!"
+fi
+
+}
+
+#allow root login
+echo "patching sshd_config"
+primifileeditor "/etc/ssh/sshd_config" "PermitRootLogin"  "PermitRootLogin yes" 
+
+#patch samba
+echo "patching samba server"
+if [ -f $PF2.ORG ] ; then
+    echo "samba server already patched, skipping ....."
+else
+    cp $PF2 $PF2.ORG
+    cp $PF2.temp $PF2
+    rm $PF2.temp
+fi
+
+#patch nfs server
+echo "patching nfs server"
+if [ -f $PF3.ORG ] ; then
+    echo "nfs server already patched, skipping ....."
+else
+    cp "$PF3" "$PF3.ORG"
+    cat "$PF3.temp" >> "$PF3"
+    rm -f "$PF3.temp"
+fi
+
+#crontab
+echo "patching crontab"
+if [ -f "$PF4.temp" ]; then
+    # m h  dom mon dow   command
+    if [ -f $PF4 ] ; then
+	JFNWDT=`date +"%Y%m%d%H%M%S"`
+	cp "$PF4" "$PF4.$JFNWDT"
+	echo "" >> $PF4
+	cat "$PF4.temp" >> $PF4
+    else
+	echo "" >  "$PF4"
+	echo "# m h  dom mon dow   command" >>  "$PF4"
+	cat "$PF4.temp" >> $PF4
+    fi
+    rm -f "$PF4.temp"
+else
+    echo "No crontab patch - skip! (missing $PF4.temp"
+fi
+
+#patch suedors
+SUEDOR="dasi ALL=(ALL) NOPASSWD: ALL"
+grep "$SUEDOR" $PF1
+#echo "grep: $?"
+if [ $? -eq 0 ] ; then
+    echo "suedors already patsched ...."
+else
+    echo "patching suedors"
+    echo "$SUEDOR" >> $PF1
+fi
+
+
+
+echo "EDIT now $PF1 - press key"
+read line
+$EDITOR $PF1
+
+echo "EDIT now $PF2 - press key"
+read line
+$EDITOR $PF2
+
+echo "EDIT now $PF3 - press key"
+read line
+$EDITOR $PF3
+
+echo "EDIT now $PF4 - press key"
+read line
+$EDITOR $PF4
+crontab -e 

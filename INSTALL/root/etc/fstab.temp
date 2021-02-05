@@ -1,0 +1,13 @@
+
+#interne bufferdisk
+#UUID=547f6168-cc83-11e3-b3d9-87de126cadab /mnt/sdb1 ext4    errors=remount-ro 0       1
+/dev/sdb1 /mnt/bufferdisk ext4    errors=remount-ro 0       1
+
+#Platte-1
+#UUID=25557a69-d487-4da4-b45c-c6cea2523cf4 /mnt/sdc1   auto    noauto,defaults 0       0
+
+#Platte-2
+#UUID=e432e043-48a3-4958-9233-617cee77e3ab  /mnt/sdd1   auto    noauto,defaults 0       0
+
+#Platte-3
+#UUID=8db87b43-e127-4d4b-bd8a-8a7f67faf7ad /mnt/sde1   auto    noauto,defaults 0       0

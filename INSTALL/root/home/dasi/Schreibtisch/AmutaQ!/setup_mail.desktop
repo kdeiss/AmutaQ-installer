@@ -1,0 +1,12 @@
+#!/usr/bin/env xdg-open
+
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=setup Mail
+Comment=setup Mail
+Exec=/usr/local/bin/gksudo /opt/AmutaQ!/tools/setup_mail
+Icon=mail-mark-important
+Path=/opt/AmutaQ!/tools/
+Terminal=false
+StartupNotify=false

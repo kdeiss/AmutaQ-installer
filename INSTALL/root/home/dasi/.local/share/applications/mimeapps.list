@@ -1,0 +1,8 @@
+[Default Applications]
+application/x-shellscript=shotwell-viewer.desktop
+
+[Added Associations]
+x-scheme-handler/file=exo-file-manager.desktop
+x-scheme-handler/trash=exo-file-manager.desktop
+application/x-vmdkmanager=vmdkmanager.desktop;
+

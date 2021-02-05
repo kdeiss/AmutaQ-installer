@@ -1,0 +1,17 @@
+#! /bin/bash
+# V 0.0.1
+# by k.deiss@it-userdesk.de
+
+
+LOG="/var/log/restore.log"
+TMP="/tmp/$$.tmp"
+T="/BACKUPS/restore"
+S=`pwd`
+S1=`basename $S`
+
+#rights for vmware 
+chown nobody $S/*
+chgrp nogroup $S/*
+chown nobody $S
+chgrp nogroup $S
+chmod 777 $S

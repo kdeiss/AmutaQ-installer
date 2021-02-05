@@ -1,0 +1,11 @@
+#! /bin/bash
+DT=`date +"%d-%b-%y-%H"`
+FN="/opt/AmutaQ!/opt_install_`hostname`${DT}.tgz"
+tar --exclude=*.idx -czf $FN /opt/AmutaQ!-install
+exit 0
+cp $FN "/mnt/smb/AUSTAUSCH/opt"
+if [ $? -eq 0 ] ; then
+    rm $FN
+else
+    echo "error in copy!"
+fi

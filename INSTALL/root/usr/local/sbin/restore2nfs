@@ -1,0 +1,32 @@
+#! /bin/bash
+# restore ghetto backups from ddumbfs 
+# Target ($T) should be a directory which is seen by running esxi host 
+# V 0.0.1
+# by k.deiss@it-userdesk.de
+
+
+LOG="/var/log/restore.log"
+TMP="/tmp/$$.tmp"
+T="/BACKUPS/restore"
+S=`pwd`
+S1=`basename $S`
+
+#   echo $S
+
+    #start rsync from ddumbfs to restore folder $T
+    echo `date` "start rsync !">>"$LOG"
+    /usr/bin/rsync -rltzuv "$S" "$T" >>$LOG 2>>$LOG
+    if [ $? -eq 0 ] ;then
+	#rights for vmware 
+	chown nobody $T/$S1/*
+	chgrp nogroup $T/$S1/*
+	chmod 777 $T/$S1
+	echo "">>"$LOG"
+	ls -la $T/$S1 >> $LOG
+	echo "">>"$LOG"
+        echo `date` "rsync ok !">>"$LOG"
+    else
+        echo `date` "rsync failure !">>"$LOG"
+	EXITSTAT=2
+    fi
+    echo "">>"$LOG"

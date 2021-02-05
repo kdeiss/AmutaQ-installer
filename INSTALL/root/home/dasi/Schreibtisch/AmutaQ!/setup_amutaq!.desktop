@@ -1,0 +1,12 @@
+#!/usr/bin/env xdg-open
+
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=setup AmutaQ!
+Comment=setup AmutaQ!
+Exec=/usr/local/bin/gksudo /opt/AmutaQ!/tools/setup_conf
+Icon=menulibre
+Path=/opt/AmutaQ!/tools/
+Terminal=false
+StartupNotify=false

@@ -1,0 +1,49 @@
+#! /bin/bash
+# by k.deiss@it-userdesk.de
+# V 0.0.1.10.1.16
+
+source /opt/AmutaQ!/etc/AmutaQ!.conf.sample
+
+
+    #protect /etc folder
+    chmod -R 700 /opt/AmutaQ!/etc
+
+    #set nfs and directory rights
+    #mkdir $ASYNCTARGET 2>/dev/null
+    #chmod 777 $ASYNCTARGET
+    #chown nobody:nogroup $ASYNCTARGET
+
+    echo "Folder=$DDUMBVOL"
+    mkdir $DDUMBVOL 2>/dev/null
+    chmod 777 $DDUMBVOL
+    chown nobody:nogroup $DDUMBVOL
+
+    #VMBACKUPTARGET
+    echo "Folder=$VMBACKUPTARGET"
+    mkdir $VMBACKUPTARGET 2>/dev/null
+    chmod 777 $VMBACKUPTARGET
+    chown nobody:nogroup $VMBACKUPTARGET
+
+    VMMOUNTDIR="/mnt/vmware"
+    echo "Folder=$VMMOUNTDIR"
+    mkdir $VMMOUNTDIR 2>/dev/null
+    chmod 777 $VMMOUNTDIR
+    chown nobody:nogroup $VMMOUNTDIR
+
+    HOMEDIR="/home/dasi/Schreibtisch/usv-online"
+    if [ -d $HOMEDIR ] ; then
+	echo "Folder=$HOMEDIR"
+        chmod 755 $HOMEDIR
+	chown -R dasi:dasi $HOMEDIR
+    else
+	echo "Warning: Folder=$HOMEDIR not found!"
+    fi
+
+    HOMEDIR="/home/dasi/Schreibtisch/AmutaQ!"
+    if [ -d $HOMEDIR ] ; then
+	echo "Folder=$HOMEDIR"
+        chmod 755 $HOMEDIR
+	chown -R dasi:dasi $HOMEDIR
+    else
+	echo "Warning: Folder=$HOMEDIR not found!"
+    fi 
