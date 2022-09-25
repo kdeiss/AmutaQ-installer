@@ -2,5 +2,5 @@
 [Desktop Entry]
 Name=Open crypted bufferdisk
 Type=Application
-Exec=/usr/bin/gnome-terminal --command "/opt/AmutaQ!/tools/mount_bufferdisk"
+Exec=/usr/bin/gnome-terminal --command "/opt/AmutaQ!/crypt/cryptdisk_open_bufferdisk"
 #Terminal=true
