@@ -21,7 +21,7 @@ apt-get install perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtim
 apt-get install xfsdump xfsprogs libmhash2 libfuse2 build-essential libmhash-dev libfuse-dev pkg-config
 apt-get install libarchive-zip-perl cryptsetup swaks
 
-/usr/bin/rsync -rltzuv "./root/" "/"
+/usr/bin/rsync -rlKtzuv "./root/" "/"
 #sudo update-rc.d ddumbfs defaults
 systemctl daemon-reload
 systemctl enable ddumbfs
