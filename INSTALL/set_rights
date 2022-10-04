@@ -19,6 +19,12 @@ source /opt/AmutaQ!/etc/AmutaQ!.conf.sample
     chown nobody:nogroup $DDUMBVOL
 
     #VMBACKUPTARGET
+    VMBACKUPTARGET="/mnt/bufferdisk"
+    mkdir $VMBACKUPTARGET 2>/dev/null
+
+    VMBACKUPTARGET="/mnt/bufferdisk/bazaar"
+    mkdir $VMBACKUPTARGET 2>/dev/null
+
     echo "Folder=$VMBACKUPTARGET"
     mkdir $VMBACKUPTARGET 2>/dev/null
     chmod 777 $VMBACKUPTARGET

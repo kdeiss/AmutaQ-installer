@@ -40,7 +40,24 @@ function install_webmin()
 {	apt-get -y install perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtime libio-pty-perl apt-show-versions python unzip shared-mime-info
 	wget http://prdownloads.sourceforge.net/webadmin/webmin_2.000_all.deb
 	dpkg --install webmin_2.000_all.deb
+	rm -f ./webmin_2.000_all.deb
 }
+
+function ask4webmin()
+{	let INSTALL_WEBMIN=0
+	echo ""
+	while true; do
+	    read -p "Do you wish to install webmin?" yn
+	    case $yn in
+    		[Yy]* ) let INSTALL_WEBMIN=1; break;;
+    		[Nn]* ) break;;
+    		* ) echo "Please answer yes or no.";;
+	    esac
+	done
+}
+
+
+ask4webmin
 
 
 echo "INF Installing required packages."
@@ -52,38 +69,34 @@ apt-get install -y libarchive-zip-perl cryptsetup swaks
 #xrdp
 apt-get install -y xrdp xorgxrdp
 
+echo ""
+echo "all required packages installed - now installing binaries!"
 
 #AH don't overwrite symlinks!
 /usr/bin/rsync -rlKtzuv "./root/" "/"
+
+echo ""
+echo "binaries installed - enabling DDUMBFS service!"
+
 
 #sudo update-rc.d ddumbfs defaults
 systemctl daemon-reload
 systemctl enable ddumbfs
 
 echo ""
-echo "DDUMBFS service installed!"
-echo "press key"
-read line
+echo "DDUMBFS service enabled!"
 
 
 ##Webmin optional! 
 ##Sicherheitslücken? AH
 
-echo ""
-while true; do
-    read -p "Do you wish to install webmin?" yn
-    case $yn in
-        [Yy]* ) install_webmin; break;;
-        [Nn]* ) break;;
-        * ) echo "Please answer yes or no.";;
-    esac
-done
-
-echo ""
-echo "webmin service installed - access it http://localhost:10000"
-echo "press key"
-read line
-
+if [ $INSTALL_WEBMIN -eq 1 ] ; then
+    install_webmin
+    echo ""
+    echo "webmin service installed - access it at http://localhost:10000"
+    echo "press key"
+    read line
+fi
 
 #smime&co
 update-desktop-database /home/dasi/.local/share/applications
@@ -91,10 +104,17 @@ update-mime-database /home/dasi/.local/share/mime
 
 echo ""
 echo "desktop and mime update succeeded - will patch system now!"
+echo "each required file will after patching be loaded into your prefered editor."
+echo "adapt settings to your requirements."
 echo "press key"
 read line
 
+
 ./filepatch
+
+echo ""
+echo "system patched - granting rights!"
+
 ./set_rights
 
 echo ""
