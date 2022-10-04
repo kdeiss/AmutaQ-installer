@@ -6,22 +6,36 @@
 # V 0.1.0.21.9.20 Update to Linux Mint 20
 # V 0.1.0.30.9.22 Update for Linux Mint 20.1
 
-AQ="/opt/AmutaQ!"
-if [ -d $AQ ];then
-    echo "AmutaQ! folder found, fine!"
-else
-    echo "$AQ not found! Pls install binary package before running this script!"
-    exit 1
-fi
 
 AQI="/opt/AmutaQ-installer"
 if [ -d $AQI ];then
-    echo "AmutaQ! Installer folder found, fine!"
+    echo "AmutaQ! Installer folder '$AQI' found, fine!"
 else
-    echo "$AQI not found! Pls install binary package before running this script!"
+    echo "$AQI not found! Run this script from $AIO"
     exit 1
 fi
 
+AQB="/opt/AmutaQ"
+AQ="AQB!"
+if [ -d $AQ ];then
+    echo "AmutaQ! folder '$AQI' found, fine!"
+else
+    cd /opt
+    echo "$AQ not found! Try to install AmutaQ via git!"
+    apt-get -y install git
+    git clone https://github.com/kdeiss/AmutaQ.git
+    #github kann keine ! im Namen
+    mv $AQB $AQ
+    if [ -d $AQ ];then
+	echo "AmutaQ! ($AQ) folder ($AQ) found, fine!"
+    else
+        echo "$AQ not found! Pls run 'git clone https://github.com/kdeiss/AmutaQ.git' before running this script!"
+	exit 1
+    fi
+    cd $AQI
+fi
+
+exit 0
 
 echo "INF Installing required packages."
 apt-get update
