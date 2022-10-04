@@ -103,9 +103,9 @@ update-desktop-database /home/dasi/.local/share/applications
 update-mime-database /home/dasi/.local/share/mime
 
 echo ""
-echo "desktop and mime update succeeded - will patch system now!"
-echo "each required file will after patching be loaded into your prefered editor."
-echo "adapt settings to your requirements."
+echo "Desktop and MIME update succeeded - will patch the system now!"
+echo "NOTE: Each required file will be loaded into your favorite editor after patching."
+echo "Customize settings to suit your needs."
 echo "press key"
 read line
 
