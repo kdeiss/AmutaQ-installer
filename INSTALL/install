@@ -4,6 +4,7 @@
 # V 0.0.2.28.3.15
 # V 0.0.3.28.12.15
 # V 0.1.0.21.9.20 Update to Linux Mint 20
+# V 0.1.0.30.9.22 Update for Linux Mint 20.1
 
 AQ="/opt/AmutaQ!"
 if [ -d $AQ ];then
@@ -13,15 +14,28 @@ else
     exit 1
 fi
 
+AQI="/opt/AmutaQ-installer"
+if [ -d $AQI ];then
+    echo "AmutaQ! Installer folder found, fine!"
+else
+    echo "$AQI not found! Pls install binary package before running this script!"
+    exit 1
+fi
 
-echo "preparing machine ....."
+
+echo "INF Installing required packages."
 apt-get update
-apt-get install ssh mc nfs-kernel-server htop sshpass dos2unix #open-vm-tools-desktop
-apt-get install perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtime libio-pty-perl apt-show-versions #python python-paramiko python-setuptools 
-apt-get install xfsdump xfsprogs libmhash2 libfuse2 build-essential libmhash-dev libfuse-dev pkg-config
-apt-get install libarchive-zip-perl cryptsetup swaks
+apt-get install -y ssh mc nfs-kernel-server htop sshpass dos2unix #open-vm-tools-desktop
+apt-get install -y perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtime libio-pty-perl apt-show-versions #python python-paramiko python-setuptools
+apt-get install -y xfsdump xfsprogs libmhash2 libfuse2 build-essential libmhash-dev libfuse-dev pkg-config
+apt-get install -y libarchive-zip-perl cryptsetup swaks
+#xrdp
+apt-get install -y xrdp xorgxrdp
 
+
+#AH symlinks nicht überschreiben!
 /usr/bin/rsync -rlKtzuv "./root/" "/"
+
 #sudo update-rc.d ddumbfs defaults
 systemctl daemon-reload
 systemctl enable ddumbfs
@@ -29,17 +43,14 @@ systemctl enable ddumbfs
 echo "press key"
 read line
 
-#xrdp
-apt install xrdp
 
 ##Kein Webmin! Sicherheitslücken? ah
 #dpkg -i /opt/AmutaQ!-install/webmin/webmin_1.700_all.deb
+#echo "press key"
+#read line
 
-echo "press key"
-read line
 
-
-#der ganze kack fuer smime
+#smime&co
 update-desktop-database /home/dasi/.local/share/applications
 update-mime-database /home/dasi/.local/share/mime
 
@@ -52,7 +63,7 @@ read line
 echo "install vmware vix-disklib-lib"
 echo "press key"
 read line
-/opt/AmutaQ!-install/vmware-vix-disklib-distrib/vmware-install.pl
+$AQI/vmware-vix-disklib-distrib/vmware-install.pl
 
 echo "dont forget to open ssh port on your esxi server !!!!!!!!!"
 echo "press key"
