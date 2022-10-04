@@ -16,9 +16,9 @@ else
 fi
 
 AQB="/opt/AmutaQ"
-AQ="AQB!"
+AQ="$AQB!"
 if [ -d $AQ ];then
-    echo "AmutaQ! folder '$AQI' found, fine!"
+    echo "AmutaQ! folder '$AQ' found, fine!"
 else
     cd /opt
     echo "$AQ not found! Try to install AmutaQ via git!"
@@ -27,15 +27,21 @@ else
     #github kann keine ! im Namen
     mv $AQB $AQ
     if [ -d $AQ ];then
-	echo "AmutaQ! ($AQ) folder ($AQ) found, fine!"
+	echo "AmutaQ! folder ($AQ) found, fine!"
     else
         echo "$AQ not found! Pls run 'git clone https://github.com/kdeiss/AmutaQ.git' before running this script!"
 	exit 1
     fi
-    cd $AQI
+    cd "$AQI/INSTALL"
 fi
 
-exit 0
+
+function install_webmin()
+{	apt-get -y install perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtime libio-pty-perl apt-show-versions python unzip shared-mime-info
+	wget http://prdownloads.sourceforge.net/webadmin/webmin_2.000_all.deb
+	dpkg --install webmin_2.000_all.deb
+}
+
 
 echo "INF Installing required packages."
 apt-get update
@@ -47,38 +53,57 @@ apt-get install -y libarchive-zip-perl cryptsetup swaks
 apt-get install -y xrdp xorgxrdp
 
 
-#AH symlinks nicht überschreiben!
+#AH don't overwrite symlinks!
 /usr/bin/rsync -rlKtzuv "./root/" "/"
 
 #sudo update-rc.d ddumbfs defaults
 systemctl daemon-reload
 systemctl enable ddumbfs
 
+echo ""
+echo "DDUMBFS service installed!"
 echo "press key"
 read line
 
 
-##Kein Webmin! Sicherheitslücken? ah
-#dpkg -i /opt/AmutaQ!-install/webmin/webmin_1.700_all.deb
-#echo "press key"
-#read line
+##Webmin optional! 
+##Sicherheitslücken? AH
+
+echo ""
+while true; do
+    read -p "Do you wish to install webmin?" yn
+    case $yn in
+        [Yy]* ) install_webmin; break;;
+        [Nn]* ) break;;
+        * ) echo "Please answer yes or no.";;
+    esac
+done
+
+echo ""
+echo "webmin service installed - access it http://localhost:10000"
+echo "press key"
+read line
 
 
 #smime&co
 update-desktop-database /home/dasi/.local/share/applications
 update-mime-database /home/dasi/.local/share/mime
 
+echo ""
+echo "desktop and mime update succeeded - will patch system now!"
 echo "press key"
 read line
 
 ./filepatch
 ./set_rights
 
+echo ""
 echo "install vmware vix-disklib-lib"
 echo "press key"
 read line
 $AQI/vmware-vix-disklib-distrib/vmware-install.pl
 
-echo "dont forget to open ssh port on your esxi server !!!!!!!!!"
+echo ""
+echo "dont forget to open ssh port on your esxi server!"
 echo "press key"
 read line
