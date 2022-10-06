@@ -8,31 +8,27 @@
 
 
 AQI="/opt/AmutaQ-installer"
+AQ="/opt/AmutaQ!"
+
 if [ -d $AQI ];then
     echo "AmutaQ! Installer folder '$AQI' found, fine!"
 else
-    echo "$AQI not found! Run this script from $AIO"
+    echo "Folder '$AQI' not found! Run this script from '$AQI'"
     exit 1
 fi
 
-AQB="/opt/AmutaQ"
-AQ="$AQB!"
 if [ -d $AQ ];then
     echo "AmutaQ! folder '$AQ' found, fine!"
 else
-    cd /opt
     echo "$AQ not found! Try to install AmutaQ via git!"
     apt-get -y install git
-    git clone https://github.com/kdeiss/AmutaQ.git
-    #github kann keine ! im Namen
-    mv $AQB $AQ
+    git clone https://github.com/kdeiss/AmutaQ.git $AQ
     if [ -d $AQ ];then
-	echo "AmutaQ! folder ($AQ) found, fine!"
+	echo "AmutaQ! folder '$AQ' found, fine!"
     else
-        echo "$AQ not found! Pls run 'git clone https://github.com/kdeiss/AmutaQ.git' before running this script!"
+        echo "Folder '$AQ' not found! Pls run 'git clone https://github.com/kdeiss/AmutaQ.git $AQ' before running this script!"
 	exit 1
     fi
-    cd "$AQI/INSTALL"
 fi
 
 
@@ -72,7 +68,6 @@ apt-get install -y xrdp xorgxrdp
 echo ""
 echo "all required packages installed - now installing binaries!"
 
-#AH don't overwrite symlinks!
 /usr/bin/rsync -rlKtzuv "./root/" "/"
 
 echo ""
@@ -86,9 +81,7 @@ systemctl enable ddumbfs
 echo ""
 echo "DDUMBFS service enabled!"
 
-
 ##Webmin optional! 
-##Sicherheitslücken? AH
 
 if [ $INSTALL_WEBMIN -eq 1 ] ; then
     install_webmin
