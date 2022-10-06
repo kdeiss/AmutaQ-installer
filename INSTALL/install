@@ -34,9 +34,9 @@ fi
 
 function install_webmin()
 {	apt-get -y install perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtime libio-pty-perl apt-show-versions python unzip shared-mime-info
-	wget https://www.webmin.com/download/deb/webmin-current.deb
-	dpkg --install webmin_current.deb
-	rm -f ./webmin_current.deb
+	wget https://prdownloads.sourceforge.net/webadmin/webmin_2.000_all.deb
+	dpkg --install webmin_2.000_all.deb
+	rm -f ./webmin_2.000_all.deb
 	systemctl start webmin
 }
 
