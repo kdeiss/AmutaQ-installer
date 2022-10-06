@@ -104,12 +104,12 @@ echo "press key"
 read line
 
 
-./filepatch
+$AQI/INSTALL//filepatch
 
 echo ""
 echo "system patched - granting rights!"
 
-./set_rights
+$AQI/INSTALL//set_rights
 
 echo ""
 echo "install vmware vix-disklib-lib"
