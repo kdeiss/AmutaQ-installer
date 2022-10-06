@@ -69,7 +69,7 @@ apt-get install -y xrdp xorgxrdp
 echo ""
 echo "all required packages installed - now installing binaries!"
 
-/usr/bin/rsync -rlKtzuv "./root/" "/"
+/usr/bin/rsync -rlKtzuv "$AQI/INSTALL/root/" "/"
 
 echo ""
 echo "binaries installed - enabling DDUMBFS service!"
