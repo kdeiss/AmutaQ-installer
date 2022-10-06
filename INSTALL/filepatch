@@ -7,7 +7,7 @@ PF1=/etc/sudoers
 PF2=/etc/samba/smb.conf
 PF3=/etc/exports
 PF4=/var/spool/cron/crontabs/root
-EDITOR=mcedit
+EDITOR=sensible-editor
 
 function primifileeditor()
 {
@@ -41,7 +41,7 @@ else
 fi
 
 if [ $lfound -eq 1 ] ; then
-    echo "$fname patsched ....."
+    echo "$fname patched ....."
     cp $TMPFILE $fname
 else
     echo "ERR $lfound lines found with $search !!!"
@@ -119,5 +119,4 @@ $EDITOR $PF3
 
 echo "EDIT now $PF4 - press key"
 read line
-$EDITOR $PF4
 crontab -e 
