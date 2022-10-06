@@ -43,7 +43,7 @@ fi
 if [ $lfound -eq 1 ] ; then
     echo "$fname patched ....."
     cp $TMPFILE $fname
-else if [ $lfound -eq 0 ] ; then
+elif [ $lfound -eq 0 ] ; then
     echo "$fname patched ...., appended at the end"
     echo $line >> $TMPFILE
     cp $TMPFILE $fname
