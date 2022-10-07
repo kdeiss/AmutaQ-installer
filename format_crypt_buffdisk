@@ -42,11 +42,22 @@ if [ ! -b /dev/$DISK1 ]; then
         exit 1
 fi
 
+# resulting in syntax error kd 9/22
 # check whether device is available
-if [ $RAID -eq 1 && ! -b /dev/$DISK2 ]; then
+#if [ $RAID -eq 1 && ! -b /dev/$DISK2 ] ; then
+#        #this disk is mounted we can't continue
+#        echo "ERROR: DEVICE /dev/$DISK2 IS NO BLOCK DEVICE - CAN'T CONTINUE"
+#        exit 1
+#fi
+
+
+# check whether device is available
+if [ $RAID -eq 1 ] ; then
+    if [ ! -b /dev/$DISK2 ] ; then
         #this disk is mounted we can't continue
         echo "ERROR: DEVICE /dev/$DISK2 IS NO BLOCK DEVICE - CAN'T CONTINUE"
         exit 1
+    fi
 fi
 
 
